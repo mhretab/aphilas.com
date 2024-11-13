@@ -79,6 +79,18 @@ const HeroSection = () => {
     '/project-5.png',
   ];
 
+  const generatedContent = [
+    { name: 'Prototype Development', description: 'We offer comprehensive prototype development services to bring your ideas to life.' },
+    { name: 'Product Development', description: 'Our product development services ensure your product is market-ready.' },
+    { name: 'Consultancy', description: 'We provide expert consultancy services to help you navigate complex challenges.' },
+  ];
+
+  const projectContent = [
+    { name: 'Project Alpha', description: 'A groundbreaking project that revolutionizes the industry.', image: '/project-1.png' },
+    { name: 'Project Beta', description: 'An innovative solution to modern problems.', image: '/project-2.png' },
+    { name: 'Project Gamma', description: 'A creative approach to traditional challenges.', image: '/project-3.png' },
+  ];
+
   return (
     <div className="relative min-h-screen w-full max-w-[1280px] mx-auto overflow-hidden bg-gray-900">
       {/* Background columns container */}
@@ -167,6 +179,44 @@ const HeroSection = () => {
         >
           View Our Work
         </motion.button>
+      </motion.div>
+
+      {/* Generated content */}
+      <motion.div 
+        className="relative flex flex-col items-center text-center px-4 sm:px-6 md:px-8 z-20 mt-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {generatedContent.map((service, index) => (
+          <div key={index} className="mb-8">
+            <h2 className="text-2xl font-bold text-white">{service.name}</h2>
+            <p className="text-gray-300">{service.description}</p>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Projects section */}
+      <motion.div 
+        className="relative flex flex-col items-center text-center px-4 sm:px-6 md:px-8 z-20 mt-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {projectContent.map((project, index) => (
+          <div key={index} className="mb-8">
+            <h2 className="text-2xl font-bold text-white">{project.name}</h2>
+            <p className="text-gray-300">{project.description}</p>
+            <div className="relative w-full h-64 mt-4">
+              <Image 
+                src={project.image} 
+                alt={project.name}
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        ))}
       </motion.div>
     </div>
   );
