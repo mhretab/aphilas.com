@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getResendClient } from '@/lib/resend';
 
 interface ContactFormData {
   name: string;
@@ -16,7 +17,8 @@ const serviceLabels: Record<string, string> = {
   other: 'Other',
 };
 
-export const runtime = 'edge';
+// Remove edge runtime to use Resend SDK (Node.js runtime required)
+// export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,44 +38,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Invalid email format' }, { status: 400 });
     }
 
-    // Check if RESEND_API_KEY is configured
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.error('RESEND_API_KEY is not configured');
-      return NextResponse.json(
-        { success: false, error: 'Email service not configured' },
-        { status: 500 },
-      );
-    }
-
     const serviceLabel = body.service
       ? serviceLabels[body.service] || body.service
       : 'Not specified';
     const toEmail = process.env.CONTACT_EMAIL || 'info@aphilas.com';
 
-    // Use Resend API directly via fetch (edge-compatible)
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Aphilas Studio <onboarding@resend.dev>', // Use resend.dev for testing, change to your verified domain
-        to: toEmail,
-        reply_to: body.email,
-        subject: `New Contact Form Submission from ${body.name}`,
-        html: generateEmailHtml(body, serviceLabel),
-      }),
+    // Use Resend SDK client
+    const resend = getResendClient();
+
+    const { data, error } = await resend.emails.send({
+      from: 'Aphilas Studio <onboarding@resend.dev>', // Use resend.dev for testing, change to your verified domain
+      to: toEmail,
+      replyTo: body.email,
+      subject: `New Contact Form Submission from ${body.name}`,
+      html: generateEmailHtml(body, serviceLabel),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Resend API error:', errorData);
+    if (error) {
+      console.error('Resend SDK error:', error);
       return NextResponse.json({ success: false, error: 'Failed to send email' }, { status: 500 });
     }
 
-    const data = await response.json();
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('Contact API error:', error);
