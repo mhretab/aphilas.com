@@ -20,116 +20,109 @@ const ProjectColumn = ({ images, direction = 'up', speed = 20, startIndex = 0, i
   ];
 
   const yAnimation = direction === 'up'
-    ? [0, -(images.length * 600)]
-    : [-(images.length * 600), 0];
+    ? [0, -(images.length * 400)]
+    : [-(images.length * 400), 0];
 
   return (
-    <div className="relative h-full w-full">
-      <motion.div
-        className="absolute flex flex-col gap-4 md:gap-6"
-        initial={{ y: direction === 'up' ? 0 : -(images.length * 600) }}
-        animate={{ y: yAnimation }}
-        transition={{
-          y: {
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: speed,
-            ease: "linear"
-          }
-        }}
-        style={{
-          willChange: 'transform'
-        }}
-      >
-        {columnImages.map((img, index) => (
-          <div 
-            key={index} 
-            className="relative w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] aspect-[3/4] opacity-100 hover:opacity-100 transition-all duration-300 rounded-xl md:rounded-2xl shadow-lg"
-            style={{
-              transform: 'translateZ(0)',
-              padding: '8px',
-              background: 'rgba(255, 255, 255, 008)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-            }}
-          >
-            <div className="relative w-full h-full rounded-lg md:rounded-xl">
-              <Image 
-                src={img} 
-                alt={`Project ${index + 1}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 240px, 280px"
-                priority={isFirstColumn && index === 0}
-              />
-            </div>
-          </div>
-        ))}
-      </motion.div>
-    </div>
+    <motion.div
+      className="flex flex-col gap-6 md:gap-8 absolute inset-0"
+      initial={{ y: direction === 'up' ? 0 : -(images.length * 400) }}
+      animate={{ y: yAnimation }}
+      transition={{
+        y: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: speed,
+          ease: "linear"
+        }
+      }}
+    >
+      {columnImages.map((img, index) => (
+        <div 
+          key={index} 
+          className="relative w-full md:w-[340px] aspect-[3/4] opacity-75 hover:opacity-100 transition-all duration-300 rounded-xl md:rounded-2xl shadow-lg"
+          style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+          }}
+        >
+          <Image 
+            src={img} 
+            alt={`Project ${index + 1}`}
+            fill
+            className="object-cover rounded-lg md:rounded-xl p-1"
+            sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 240px, 280px"
+            priority={isFirstColumn && index === 0}
+          />
+        </div>
+      ))}
+    </motion.div>
   );
 };
 
 const HeroSection = () => {
-  const projectImages = [
+  const projectImages1 = [
     '/project-1.png',
     '/project-2.png',
     '/project-3.png',
+  ];
+  const projectImages2 = [
     '/project-4.png',
     '/project-5.png',
+    '/project-6.png',
   ];
 
   return (
-    <div className="relative min-h-screen w-full max-w-[1280px] mx-auto overflow-hidden bg-gray-900">
-      {/* Background columns container */}
-      <div className="absolute inset-0 flex gap-4 sm:gap-6 md:gap-8 justify-evenly px-4 sm:px-6 md:px-8">
-        {/* Hide last two columns on mobile, show progressively on larger screens */}
-        <div className="relative h-screen flex-1">
-          <ProjectColumn 
-            images={projectImages} 
-            direction="up" 
-            speed={75} 
-            startIndex={0}
-            isFirstColumn={true}
-          />
-        </div>
-
-        <div className="relative h-screen flex-1">
-          <ProjectColumn 
-            images={projectImages} 
-            direction="down" 
-            speed={75}
-            startIndex={1}
-          />
-        </div>
-
-        <div className="relative hidden md:block h-screen flex-1">
-          <ProjectColumn 
-            images={projectImages} 
-            direction="up" 
-            speed={75}
-            startIndex={2}
-          />
-        </div>
-
-        <div className="relative hidden lg:block h-screen flex-1">
-          <ProjectColumn 
-            images={projectImages} 
-            direction="down" 
-            speed={75}
-            startIndex={3}
-          />
-        </div>
-      </div>
-
+    <div className="relative min-h-screen w-full max-w-[1440px] mx-auto bg-gray-900">
       {/* Dark overlay with gradient and frosted glass effect */}
       <div 
-        className="absolute inset-0 z-10" 
+        className="absolute inset-0 z-20" 
         style={{
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.85), rgba(0,0,0,0.92))',
           backdropFilter: 'blur(10px)',
         }}
       />
+
+      {/* Background columns container */}
+      <div className="absolute inset-0 flex gap-4 sm:gap-6 md:gap-8 justify-evenly px-4 z-10">
+        <div className="relative flex-1">
+          <ProjectColumn 
+            images={projectImages1} 
+            direction="up" 
+            speed={40} 
+            startIndex={0}
+            isFirstColumn={true}
+          />
+        </div>
+
+        <div className="relative flex-1">
+          <ProjectColumn 
+            images={projectImages2} 
+            direction="down" 
+            speed={50}
+            startIndex={0}
+          />
+        </div>
+
+        <div className="relative hidden md:block flex-1">
+          <ProjectColumn 
+            images={projectImages1} 
+            direction="up" 
+            speed={45}
+            startIndex={2}
+          />
+        </div>
+
+        <div className="relative hidden lg:block flex-1">
+          <ProjectColumn 
+            images={projectImages2} 
+            direction="down" 
+            speed={35}
+            startIndex={2}
+          />
+        </div>
+      </div>
 
       {/* Main content */}
       <motion.div 
