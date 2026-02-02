@@ -12,7 +12,7 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  category: 'product' | 'prototype' | 'consultancy';
+  category: 'product' | 'prototype' | 'consultancy' | 'hardware' | 'iot';
   image: string;
   tags: string[];
 }
