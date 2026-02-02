@@ -41,7 +41,7 @@ export function Footer() {
             <div className="flex gap-4">
               {/* Social Links */}
               <motion.a
-                href="https://linkedin.com"
+                href="https://linkedin.com/company/aphilas"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -52,7 +52,7 @@ export function Footer() {
                 </svg>
               </motion.a>
               <motion.a
-                href="https://github.com"
+                href="https://github.com/AphilasStudio"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -63,7 +63,7 @@ export function Footer() {
                 </svg>
               </motion.a>
               <motion.a
-                href="https://twitter.com"
+                href="https://x.com/AphilasStudio"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
