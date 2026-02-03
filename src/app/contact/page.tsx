@@ -22,14 +22,14 @@ const contactInfo = [
   {
     icon: MapPinIcon,
     title: "Location",
-    value: "Stockholm, Sweden",
+    value: "Sollentuna, Sweden",
     href: null,
   },
   {
     icon: PhoneIcon,
     title: "Phone",
-    value: "+46 70 123 4567",
-    href: "tel:+46701234567",
+    value: "+46 72 28 10685",
+    href: null,
   },
 ];
 
