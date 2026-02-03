@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getResendClient } from '@/lib/resend';
 
 interface ContactFormData {
   name: string;
@@ -17,8 +16,8 @@ const serviceLabels: Record<string, string> = {
   other: 'Other',
 };
 
-// Remove edge runtime to use Resend SDK (Node.js runtime required)
-// export const runtime = 'edge';
+// Enable Edge Runtime for Cloudflare Pages compatibility
+export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,23 +41,39 @@ export async function POST(request: NextRequest) {
       ? serviceLabels[body.service] || body.service
       : 'Not specified';
     const toEmail = process.env.CONTACT_EMAIL || 'info@aphilas.com';
+    const resendApiKey = process.env.RESEND_API_KEY;
 
-    // Use Resend SDK client
-    const resend = getResendClient();
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY is not configured');
+      return NextResponse.json(
+        { success: false, error: 'Email service not configured' },
+        { status: 500 },
+      );
+    }
 
-    const { data, error } = await resend.emails.send({
-      from: 'Aphilas Studio <onboarding@resend.dev>', // Use resend.dev for testing, change to your verified domain
-      to: toEmail,
-      replyTo: body.email,
-      subject: `New Contact Form Submission from ${body.name}`,
-      html: generateEmailHtml(body, serviceLabel),
+    // Use Resend API directly with fetch (Edge Runtime compatible)
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Aphilas Studio <onboarding@resend.dev>', // Use resend.dev for testing, change to your verified domain
+        to: toEmail,
+        reply_to: body.email,
+        subject: `New Contact Form Submission from ${body.name}`,
+        html: generateEmailHtml(body, serviceLabel),
+      }),
     });
 
-    if (error) {
-      console.error('Resend SDK error:', error);
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Resend API error:', error);
       return NextResponse.json({ success: false, error: 'Failed to send email' }, { status: 500 });
     }
 
+    const data = await response.json();
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('Contact API error:', error);
