@@ -72,7 +72,7 @@ const ProjectColumn = ({
 
 export function HeroSection() {
   const projectImages1 = ["/project-1.png", "/project-2.png", "/project-3.jpg"];
-  const projectImages2 = ["/project-4.png", "/project-5.png", "/project-1.png"];
+  const projectImages2 = ["/project-4.png", "/project-6.png", "/project-9.png"];
 
   return (
     <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden">
